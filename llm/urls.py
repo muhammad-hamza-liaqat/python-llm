@@ -1,6 +1,7 @@
 from django.urls import path
-from llm.views import DeepSeekGenerateView
+from .views import DeepSeekGenerateView, HuggingFaceGenerateView
 
 urlpatterns = [
-    path("generate/", DeepSeekGenerateView.as_view(), name="deepseek_generate"),
+    path('deepseek/generate/', DeepSeekGenerateView.as_view(), name='deepseek-generate'),
+    path('huggingface/generate/', HuggingFaceGenerateView.as_view(), name='huggingface-generate'),
 ]
