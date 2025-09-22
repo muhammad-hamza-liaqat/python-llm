@@ -1,9 +1,17 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-1to*&8&inw0hqejy@f#+x@!8(beg#rx(l$j7%8(kn=-p0qd1gw'
 DEBUG = True
+
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL")
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL")
 
 ALLOWED_HOSTS = []
 
@@ -14,6 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'llm',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
