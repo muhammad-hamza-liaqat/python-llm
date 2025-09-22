@@ -1,3 +1,5 @@
+# llm/views.py
+
 from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import PromptSerializer
@@ -5,6 +7,7 @@ from .utils import call_deepseek_chat
 from .local_huggingface import call_huggingface_chat
 from server.responses import success_response, error_response
 from .prompts import reword_task_prompt, extract_code
+
 
 class DeepSeekGenerateView(APIView):
 
@@ -50,9 +53,8 @@ class HuggingFaceGenerateView(APIView):
             )
 
         task = serializer.validated_data["prompt"]
-        language = serializer.validated_data.get("language", None)
 
-        prompt = reword_task_prompt(task, language)
+        prompt = reword_task_prompt(task, language="python")
 
         try:
             content = call_huggingface_chat(prompt)

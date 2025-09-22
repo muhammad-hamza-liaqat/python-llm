@@ -1,20 +1,15 @@
 import re
 
-def reword_task_prompt(task: str, language: str = None) -> str:
-
+def reword_task_prompt(task: str, language: str = "python") -> str:
     task = task.strip().rstrip(".")
     
     base_prompt = f"Below is a programming task. OUTPUT ONLY THE CODE. Do NOT repeat the task or add explanations.\nTask: {task}"
     
-    if language:
-        language = language.lower()
-        return f"Write only {language} code. {base_prompt}"
-    
-    return f"{base_prompt}"
+    return f"Write only Python code. {base_prompt}"
+
 
 def extract_code(content: str) -> str:
-
-    code_keywords = ["def", "class", "import", "from", "const", "let", "var", "function"]
+    code_keywords = ["def", "class", "import", "from"]
     code_chars = [";", "{", "}", "=", "(", ")", "[", "]"]
 
     lines = content.splitlines()
@@ -34,5 +29,3 @@ def extract_code(content: str) -> str:
             code_lines.append(line)
 
     return "\n".join(code_lines).strip()
-
-
