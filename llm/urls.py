@@ -2,5 +2,5 @@ from django.urls import path
 from llm.views import DeepSeekGenerateView
 
 urlpatterns = [
-    path("deepseek/generate/", DeepSeekGenerateView.as_view(), name="deepseek_generate"),
+    path("generate/", DeepSeekGenerateView.as_view(), name="deepseek_generate"),
 ]

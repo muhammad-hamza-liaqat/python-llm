@@ -11,7 +11,7 @@ class DeepSeekGenerateView(APIView):
         if not serializer.is_valid():
             return error_response(
                 message="Validation failed",
-                data=serializer.errors,
+                details=serializer.errors,
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
@@ -20,13 +20,13 @@ class DeepSeekGenerateView(APIView):
         try:
             content = call_deepseek_chat(prompt)
             return success_response(
-                data={"response": content},
+                details={"response": content},
                 message="Response generated successfully",
                 status_code=status.HTTP_200_OK
             )
         except Exception as e:
             return error_response(
                 message="DeepSeek call failed",
-                data={"detail": str(e)},
+                details=str(e),
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

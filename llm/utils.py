@@ -1,32 +1,17 @@
 import requests
 from django.conf import settings
-from server.responses import error_response, success_response
-from rest_framework import status
 
 
 def call_deepseek_chat(prompt: str, temperature: float = 0.7, max_tokens: int = 200):
     if not prompt:
-        return error_response(
-            message="Prompt required",
-            status_code=status.HTTP_400_BAD_REQUEST
-        )
+        raise ValueError("Prompt required")
 
     api_key = getattr(settings, "DEEPSEEK_API_KEY", None)
     base_url = getattr(settings, "DEEPSEEK_BASE_URL", None)
     model = getattr(settings, "DEEPSEEK_MODEL", None)
 
     if not api_key or not base_url or not model:
-        return error_response(
-            message="DeepSeek configuration missing",
-            data={
-                "missing": {
-                    "DEEPSEEK_API_KEY": bool(api_key),
-                    "DEEPSEEK_BASE_URL": bool(base_url),
-                    "DEEPSEEK_MODEL": bool(model),
-                }
-            },
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+        raise RuntimeError("DeepSeek configuration missing")
 
     url = f"{base_url.rstrip('/')}/chat/completions"
     headers = {
@@ -44,40 +29,17 @@ def call_deepseek_chat(prompt: str, temperature: float = 0.7, max_tokens: int = 
         "stream": False,
     }
 
-    try:
-        resp = requests.post(url, headers=headers, json=payload, timeout=30)
-        resp.raise_for_status()
-        data = resp.json()
+    resp = requests.post(url, headers=headers, json=payload, timeout=30)
+    resp.raise_for_status()
+    data = resp.json()
 
-        content = (
-            data.get("choices", [{}])[0]
-            .get("message", {})
-            .get("content")
-        )
+    content = (
+        data.get("choices", [{}])[0]
+        .get("message", {})
+        .get("content")
+    )
 
-        if not content:
-            return error_response(
-                message="Invalid response from DeepSeek",
-                data=data,
-                status_code=status.HTTP_502_BAD_GATEWAY
-            )
+    if not content:
+        raise RuntimeError("Invalid response from DeepSeek")
 
-        return success_response(
-            data={"response": content},
-            message="DeepSeek response generated",
-            status_code=status.HTTP_200_OK
-        )
-
-    except requests.exceptions.RequestException as e:
-        return error_response(
-            message="Failed to connect to DeepSeek",
-            data={"detail": str(e)},
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE
-        )
-
-    except Exception as e:
-        return error_response(
-            message="Unexpected error while calling DeepSeek",
-            data={"detail": str(e)},
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+    return content  # just return raw text
