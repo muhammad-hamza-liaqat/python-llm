@@ -3,3 +3,10 @@ requests
 python-dotenv
 djangorestframework
 transformers
+langchain
+langchain-openai
+faiss-cpu==1.7.4
+tiktoken
+langchain-community
+langchain-chroma
+PyMuPDF
