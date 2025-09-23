@@ -4,7 +4,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, logging
 logging.set_verbosity_error()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_NAME = os.getenv("HF_MODEL", "distilgpt2")
+MODEL_NAME = os.getenv("HF_MODEL", "Salesforce/codegen-350M-mono")
 LOCAL_MODEL_PATH = os.path.join(BASE_DIR, "llm", "models", MODEL_NAME.split("/")[-1])
 
 os.makedirs(LOCAL_MODEL_PATH, exist_ok=True)
